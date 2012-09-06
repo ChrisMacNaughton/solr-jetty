@@ -1,0 +1,22 @@
+Juju charm solr-jetty
+=====================
+
+Solr is an open source enterprise search server based on the Lucene Java
+search library, with XML/HTTP and JSON APIs, hit highlighting, faceted
+search, caching, replication, and a web administration interface. This
+charm deploys Solr in the Java servlet container Jetty.
+
+How to deploy the charm
+--------------------------
+juju deploy solr-jetty 
+
+How to configure the charm
+--------------------------
+# Load custom solr schema
+juju set solr-jetty "schema=$(base64 < my-schema.xml)"
+
+# Set number of Jetty acceptors
+juju set solr-jetty "acceptors=20"
+
+# Explicitly set JVM min heap and max heap size
+juju set solr-jetty java-min-heap-mb=256 java-max-heap-mb=512

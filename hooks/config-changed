@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -eu
+hooksdir=$PWD
+
+# Allow a custom solr schema to be installed
+schema=$(config-get schema)
+if [[ -n $schema ]]; then
+    juju-log "Setting up new solr schema"
+    base64 -d <<<"$schema" > /etc/solr/conf/schema.xml
+fi
+
+# Set the number of Jetty threads dedicated to accepting incoming connections. 
+acceptors=$(config-get acceptors)
+if [[ -z $acceptors ]]; then
+    acceptors=100
+fi
+juju-log "Setting acceptors to $acceptors"
+sed -e "s/!ACCEPTORS!/$acceptors/" $hooksdir/templates/jetty.xml.template > /etc/jetty/jetty.xml
+
+# Configure JVM
+max_heap=$(config-get java-max-heap-mb)
+min_heap=$(config-get java-min-heap-mb)
+if [[ -z $max_heap ]]; then
+    system_memory_in_mb=`free -m | awk '/Mem:/ {print $2}'`
+    half_system_memory_in_mb=`expr $system_memory_in_mb / 2`
+    max_heap="${half_system_memory_in_mb}"
+fi
+
+# Set min heap equal to max heap. Takes longer to start but all memory is
+# allocated up front
+if [[ -z $min_heap ]]; then
+    min_heap=$max_heap
+fi
+
+host_ip=`unit-get private-address`
+juju-log "Setting Java Min heap: $min_heap"
+juju-log "Setting Java Max heap: $max_heap"
+sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
+    -e "s/!JAVA-MAX-HEAP!/$max_heap/" \
+    -e "s/!HOST-IP!/$host_ip/" \
+    $hooksdir/templates/jetty-default.template > /etc/default/jetty
+
+/etc/init.d/jetty stop
+/etc/init.d/jetty start

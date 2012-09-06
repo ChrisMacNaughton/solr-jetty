@@ -1,0 +1,4 @@
+#!/bin/bash
+# Hook may get called when service already running so run restart to avoid 
+# non-zero exit code
+/etc/init.d/jetty restart

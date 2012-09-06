@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eu
+# default-jdk should be a prerequisite for jetty (Bug#1046732)
+apt-get install -y solr-jetty default-jdk

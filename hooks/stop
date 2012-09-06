@@ -1,0 +1,4 @@
+#!/bin/bash
+# This will be run when the service is being torn down, allowing you to disable
+set -eu
+/etc/init.d/jetty stop
