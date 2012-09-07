@@ -22,9 +22,14 @@ sed -e "s/!ACCEPTORS!/$acceptors/" $hooksdir/templates/jetty.xml.template > /etc
 max_heap=$(config-get java-max-heap-mb)
 min_heap=$(config-get java-min-heap-mb)
 if [[ -z $max_heap ]]; then
-    system_memory_in_mb=`free -m | awk '/Mem:/ {print $2}'`
-    half_system_memory_in_mb=`expr $system_memory_in_mb / 2`
-    max_heap="${half_system_memory_in_mb}"
+    system_memory_in_mb=$(free -m | awk '/Mem:/ {print $2}')
+    half_system_memory_in_mb=$(expr $system_memory_in_mb / 2)
+    # Set max for jvm heap size as garbage collection can get expensive if the heap is too large 
+    if [[ ${half_system_memory_in_mb} > 4096 ]]; then
+        max_heap=4096
+    else
+        max_heap="${half_system_memory_in_mb}"
+    fi
 fi
 
 # Set min heap equal to max heap. Takes longer to start but all memory is
@@ -33,7 +38,7 @@ if [[ -z $min_heap ]]; then
     min_heap=$max_heap
 fi
 
-host_ip=`unit-get private-address`
+host_ip=$(unit-get private-address)
 juju-log "Setting Java Min heap: $min_heap"
 juju-log "Setting Java Max heap: $max_heap"
 sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
@@ -43,3 +48,4 @@ sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
 
 /etc/init.d/jetty stop
 /etc/init.d/jetty start
+open-port 8080/tcp
