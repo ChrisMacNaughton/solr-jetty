@@ -1,5 +1,6 @@
 name: solr-jetty
 summary: enterprise search server based on Lucene - Jetty integration
+maintainer: [Liam Young <liam.young@canonical.com>]
 description: |
   Solr is an open source enterprise search server based on the Lucene Java
   search library, with XML/HTTP and JSON APIs, hit highlighting, faceted
