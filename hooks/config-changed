@@ -1,8 +1,8 @@
 #!/bin/bash
 
-set -eu
-hooksdir=$(basename $0)
-
+set -u
+hooksdir=$(dirname $0)
+template_dir="${hooksdir}/../templates/"
 # Allow a custom solr schema to be installed
 schema=$(config-get schema)
 if [[ -n $schema ]]; then
@@ -16,7 +16,7 @@ if [[ -z $acceptors ]]; then
     acceptors=100
 fi
 juju-log "Setting acceptors to $acceptors"
-sed -e "s/!ACCEPTORS!/$acceptors/" $hooksdir/templates/jetty.xml.template > /etc/jetty/jetty.xml
+sed -e "s/!ACCEPTORS!/$acceptors/" $template_dir/jetty.xml.template > /etc/jetty/jetty.xml
 
 # Configure JVM
 max_heap=$(config-get java-max-heap-mb)
@@ -44,8 +44,22 @@ juju-log "Setting Java Max heap: $max_heap"
 sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
     -e "s/!JAVA-MAX-HEAP!/$max_heap/" \
     -e "s/!HOST-IP!/$host_ip/" \
-    $hooksdir/templates/jetty-default.template > /etc/default/jetty
+    $template_dir/jetty-default.template > /etc/default/jetty
 
 /etc/init.d/jetty stop
 /etc/init.d/jetty start
+# Wait for solr-jetty to start responding
+curl_rc=-1
+counter=0
+while [[ $curl_rc -ne 0 ]]; do
+    juju-log "Waiting for solr-jetty to respond ($counter)"
+    curl --silent "http://${host_ip}:8080/solr/select?q=test" 2>&1 > /dev/null
+    curl_rc=$?
+    if [[ $counter -gt 5 ]]; then
+        juju-log "solr-jetty not responding"
+        exit 1
+    fi
+    sleep 5
+    let counter++
+done
 open-port 8080/tcp
