@@ -25,7 +25,7 @@ if [[ -z $max_heap ]]; then
     system_memory_in_mb=$(free -m | awk '/Mem:/ {print $2}')
     half_system_memory_in_mb=$(expr $system_memory_in_mb / 2)
     # Set max for jvm heap size as garbage collection can get expensive if the heap is too large 
-    if [[ ${half_system_memory_in_mb} > 4096 ]]; then
+    if [[ ${half_system_memory_in_mb} -gt 4096 ]]; then
         max_heap=4096
     else
         max_heap="${half_system_memory_in_mb}"
