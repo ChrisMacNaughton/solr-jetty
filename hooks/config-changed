@@ -38,12 +38,10 @@ if [[ -z $min_heap ]]; then
     min_heap=$max_heap
 fi
 
-host_ip=$(unit-get private-address)
 juju-log "Setting Java Min heap: $min_heap"
 juju-log "Setting Java Max heap: $max_heap"
 sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
     -e "s/!JAVA-MAX-HEAP!/$max_heap/" \
-    -e "s/!HOST-IP!/$host_ip/" \
     $template_dir/jetty-default.template > /etc/default/jetty
 
 /etc/init.d/jetty stop
@@ -53,7 +51,7 @@ curl_rc=-1
 counter=0
 while [[ $curl_rc -ne 0 ]]; do
     juju-log "Waiting for solr-jetty to respond ($counter)"
-    curl --silent --max-time 5 "http://${host_ip}:8080/solr/select?q=test" 2>&1 > /dev/null
+    curl --silent --max-time 5 "http://localhost:8080/solr/select?q=test" 2>&1 > /dev/null
     curl_rc=$?
     if [[ $counter -gt 5 ]]; then
         juju-log "solr-jetty not responding"
