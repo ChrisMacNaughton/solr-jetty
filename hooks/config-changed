@@ -1,8 +1,8 @@
 #!/bin/bash
 
+. ./hooks/common.sh
 set -u
-hooksdir=$(dirname $0)
-template_dir="${hooksdir}/../templates/"
+template_dir="templates/"
 # Allow a custom solr schema to be installed
 schema=$(config-get schema)
 if [[ -n $schema ]]; then
@@ -45,19 +45,5 @@ sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
     $template_dir/jetty-default.template > /etc/default/jetty
 
 /etc/init.d/jetty stop
-/etc/init.d/jetty start
-# Wait for solr-jetty to start responding
-curl_rc=-1
-counter=0
-while [[ $curl_rc -ne 0 ]]; do
-    juju-log "Waiting for solr-jetty to respond ($counter)"
-    curl --silent --max-time 5 "http://localhost:8080/solr/select?q=test" 2>&1 > /dev/null
-    curl_rc=$?
-    if [[ $counter -gt 5 ]]; then
-        juju-log "solr-jetty not responding"
-        exit 1
-    fi
-    sleep 2
-    let counter++
-done
+jetty_start
 open-port 8080/tcp
