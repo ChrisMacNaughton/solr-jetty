@@ -44,6 +44,11 @@ sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
     -e "s/!JAVA-MAX-HEAP!/$max_heap/" \
     $template_dir/jetty-default.template > /etc/default/jetty
 
-/etc/init.d/jetty stop
-jetty_start
+# Restart jetty if it's already running
+pgrep jsvc 2>&1 > /dev/null
+if [[ $? -eq 0 ]]; then
+    /etc/init.d/jetty stop
+    jetty_start
+fi
+
 open-port 8080/tcp
