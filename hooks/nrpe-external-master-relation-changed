@@ -1,0 +1,27 @@
+#!/bin/bash
+set -eux
+
+NAGIOS_CONTEXT=$(config-get nagios-context)
+NAGIOS_HOSTNAME="${NAGIOS_CONTEXT}-${JUJU_UNIT_NAME//\//-}"
+INSTANCE_TYPE=$(config-get instance_type)
+REGION=$(config-get region)
+CHECK_URL=$(config-get check_url)
+CHECK_REGEX=$(config-get check_regex)
+
+NRPE_CHECK="# Solr Jetty ${INSTANCE_TYPE}
+command[check_solr_jetty_${INSTANCE_TYPE}]=/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 8080 -e ' 200 OK' --url='${CHECK_URL} --regex='${CHECK_REGEX}'"
+
+echo "$NRPE_CHECK" > /etc/nagios/nrpe.d/check_solr_jetty_${INSTANCE_TYPE}.cfg
+
+NRPE_EXPORT="define service {
+    use                             active-service
+    host_name                       ${NAGIOS_HOSTNAME}
+    service_description             ${NAGIOS_HOSTNAME} ${INSTANCE_TYPE} Solr Jetty
+    check_command                   check_nrpe!check_solr_jetty_${INSTANCE_TYPE}
+    servicegroups                   ${REGION},
+}"
+echo "$NRPE_EXPORT" > /var/lib/nagios/export/service__${NAGIOS_HOSTNAME}_check_solr_jetty_${INSTANCE_TYPE}.cfg
+
+/etc/init.d/nagios-nrpe-server reload
+
+
