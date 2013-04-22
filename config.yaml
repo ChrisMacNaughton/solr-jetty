@@ -17,3 +17,19 @@ options:
     type: int
     description: |
       The number of threads dedicated to accepting incoming connections. 
+  instance_type:
+    default: "production"
+    type: string
+    description: Instance type. Used by nrpe-external-master. i.e. production or staging
+  nagios_service_group:
+    default: ""
+    type: string
+    description: Name of nagios service group. Used by nrpe-external-master.
+  check_url:
+    default: ""
+    type: string
+    description: Health check URL
+  check_regex:
+    default: ""
+    type: string
+    description: Health check regex on output from check_url
