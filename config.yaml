@@ -20,11 +20,11 @@ options:
   instance_type:
     default: "production"
     type: string
-    description: Instance type
-  region:
+    description: Instance type. Used by nrpe-external-master. i.e. production or staging
+  nagios_service_group:
     default: ""
     type: string
-    description: Region we're deploying to
+    description: Name of nagios service group. Used by nrpe-external-master.
   check_url:
     default: ""
     type: string
