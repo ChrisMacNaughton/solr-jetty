@@ -29,8 +29,10 @@ def set_permissions():
         jetty_uid = getpwnam('jetty').pw_uid
         os.chown(SOLR_DIR, jetty_uid, -1)
         for root, dirs, files in os.walk(SOLR_DIR):
-            for entry in dirs + files:
-                os.chown(os.path.join(SOLR_DIR, entry), jetty_uid, -1)
+            for file in files:
+                os.chown(os.path.join(root, file), jetty_uid, -1)
+            for subdir in dirs:
+                os.chown(os.path.join(root, subdir), jetty_uid, -1)
 
 
 SOLR_DIR = '/var/lib/solr'
