@@ -16,3 +16,10 @@ fi
 
 # default-jdk should be a prerequisite for jetty (Bug#1046732)
 apt-get install -y solr-jetty default-jdk curl
+
+EPHEMERAL=$(config-get volume-ephemeral)
+if [[ "$EPHEMERAL" != 'True'  ]]; then
+    apt-add-repository -y ppa:charmsupport/ppa
+    apt-get update
+    apt-get install python-charmsupport
+fi

@@ -52,3 +52,9 @@ if [[ $? -eq 0 ]]; then
 fi
 
 open-port 8080/tcp
+
+# If persistent storage is configured, mount and use it
+EPHEMERAL=$(config-get volume-ephemeral)
+if [[ "$EPHEMERAL" != 'True'  ]]; then
+	/usr/bin/python scripts/mount-volume.py
+fi

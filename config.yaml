@@ -33,3 +33,23 @@ options:
     default: ""
     type: string
     description: Health check regex on output from check_url
+  volume-ephemeral:
+    type: boolean
+    default: true
+    description: >
+      If false, the /var/lib/solr will be symlinked to persistent storage. A 
+         configure-error state will be raised if
+         volume-map[$JUJU_UNIT_NAME] is not set (see "volume-map"
+         below).
+      If true, solr-jetty will run from its default directory /var/lib/solr/.
+         All data will be destroyed with the instance.
+      Note volumes require charmsupport to be installed
+  volume-map:
+    type: string
+    default: '{}'
+    description: >
+      YAML map as e.g. "{ solr-jetty/0: /dev/vdb, solr-jetty/1: /dev/vdb}".
+      Service units will raise a configure-error if volume-persistent
+      is 'true' and no volume-map value is set. Use 'juju set' to set a
+      value and 'juju resolved' to complete configuration.
+      Note volumes require charmsupport to be installed
