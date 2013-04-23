@@ -19,15 +19,19 @@ def volume_change_pre():
 
 
 def volume_change_post():
+    pass
+
+
+def set_permissions():
     if storage_is_persistent():
         # make sure data on external storage are owned
         # by the jetty user
-        jetty_uid = getpwnam('jetty').pw_nam
-        os.chmod(SOLR_DIR, jetty_uid, -1)
+        jetty_uid = getpwnam('jetty').pw_uid
+        os.chown(SOLR_DIR, jetty_uid, -1)
         for root, dirs, files in os.walk(SOLR_DIR):
             for entry in dirs + files:
                 os.chown(os.path.join(SOLR_DIR, entry), jetty_uid, -1)
-    host.service_start('jetty')
+
 
 SOLR_DIR = '/var/lib/solr'
 SAVED_DIR = "{}.{}".format(SOLR_DIR, 'charm_saved')
@@ -55,3 +59,5 @@ if __name__ == '__main__':
                 hookenv.log(e.strerror, hookenv.ERROR)
                 sys.exit(1)
             os.symlink(mountpoint, SOLR_DIR)
+            set_permissions()
+            host.service_start('jetty')
