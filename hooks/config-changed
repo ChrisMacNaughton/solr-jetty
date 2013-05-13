@@ -62,5 +62,7 @@ fi
 # If nrpe-external-master relation exists update it
 NRPE_RELATION=$(relation-ids nrpe-external-master)
 if [ -n "$NRPE_RELATION" ]; then
-        hooks/nrpe-external-master-relation-changed
+	if [ -d /var/lib/nagios/export ]; then
+		hooks/nrpe-external-master-relation-changed
+	fi
 fi
