@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-NAGIOS_CONTEXT=$(config-get nagios-context)
+NAGIOS_CONTEXT=$(config-get nagios_context)
 NAGIOS_HOSTNAME="${NAGIOS_CONTEXT}-${JUJU_UNIT_NAME//\//-}"
 INSTANCE_TYPE=$(config-get instance_type)
 SERVICE_GROUP=$(config-get nagios_service_group)
@@ -9,7 +9,7 @@ CHECK_URL=$(config-get check_url)
 CHECK_REGEX=$(config-get check_regex)
 
 NRPE_CHECK="# Solr Jetty ${INSTANCE_TYPE}
-command[check_solr_jetty_${INSTANCE_TYPE}]=/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 8080 -e ' 200 OK' --url='${CHECK_URL} --regex='${CHECK_REGEX}'"
+command[check_solr_jetty_${INSTANCE_TYPE}]=/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 8080 -e ' 200 OK' --url='${CHECK_URL}' --regex='${CHECK_REGEX}'"
 
 echo "$NRPE_CHECK" > /etc/nagios/nrpe.d/check_solr_jetty_${INSTANCE_TYPE}.cfg
 
