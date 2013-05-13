@@ -58,3 +58,9 @@ EPHEMERAL=$(config-get volume-ephemeral)
 if [[ "$EPHEMERAL" != 'True'  ]]; then
 	/usr/bin/python scripts/mount-volume.py
 fi
+
+# If nrpe-external-master relation exists update it
+NRPE_RELATION=$(relation-ids nrpe-external-master)
+if [ -n "$NRPE_RELATION" ]; then
+        hooks/nrpe-external-master-relation-changed
+fi
