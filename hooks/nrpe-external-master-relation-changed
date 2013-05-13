@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eux
 
-NAGIOS_CONTEXT=$(config-get nagios-context)
+NAGIOS_CONTEXT=$(config-get nagios_context)
 NAGIOS_HOSTNAME="${NAGIOS_CONTEXT}-${JUJU_UNIT_NAME//\//-}"
 INSTANCE_TYPE=$(config-get instance_type)
 SERVICE_GROUP=$(config-get nagios_service_group)

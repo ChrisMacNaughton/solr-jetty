@@ -25,6 +25,10 @@ options:
     default: ""
     type: string
     description: Name of nagios service group. Used by nrpe-external-master.
+  nagios_context:
+    default: ""
+    type: string
+    description: Staging or Production. Used by nrpe-external-master.
   check_url:
     default: ""
     type: string
