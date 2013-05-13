@@ -9,7 +9,7 @@ CHECK_URL=$(config-get check_url)
 CHECK_REGEX=$(config-get check_regex)
 
 NRPE_CHECK="# Solr Jetty ${INSTANCE_TYPE}
-command[check_solr_jetty_${INSTANCE_TYPE}]=/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 8080 -e ' 200 OK' --url='${CHECK_URL} --regex='${CHECK_REGEX}'"
+command[check_solr_jetty_${INSTANCE_TYPE}]=/usr/lib/nagios/plugins/check_http -I 127.0.0.1 -p 8080 -e ' 200 OK' --url='${CHECK_URL}' --regex='${CHECK_REGEX}'"
 
 echo "$NRPE_CHECK" > /etc/nagios/nrpe.d/check_solr_jetty_${INSTANCE_TYPE}.cfg
 
