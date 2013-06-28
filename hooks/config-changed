@@ -56,6 +56,7 @@ open-port 8080/tcp
 # If persistent storage is configured, mount and use it
 EPHEMERAL=$(config-get volume-ephemeral)
 if [[ "$EPHEMERAL" != 'True'  ]]; then
+	juju-log "Mounting persistent storage"
 	/usr/bin/python scripts/mount-volume.py
 fi
 
