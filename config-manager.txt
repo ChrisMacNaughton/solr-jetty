@@ -3,6 +3,5 @@
 #
 #   make sourcedeps
 
-./lib/charmsupport                        bzr+ssh://bazaar.launchpad.net/+branch/charmsupport;revno=41
-./lib/charm-tools                         bzr+ssh://bazaar.launchpad.net/+branch/charm-tools;revno=172
+./lib/charm-helpers                       bzr+ssh://bazaar.launchpad.net/+branch/charmsupport;revno=38
 ./lib/shelltoolbox                        bzr+ssh://bazaar.launchpad.net/+branch/python-shelltoolbox;revno=17

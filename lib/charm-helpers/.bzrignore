@@ -1,0 +1,8 @@
+*.pyc
+dist/
+build/
+MANIFEST
+charmhelpers/version.py
+.coverage
+.env/
+coverage.xml
