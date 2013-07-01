@@ -1,7 +1,7 @@
 #!/bin/bash
 
 . ./hooks/common.sh
-set -u
+set -ue
 template_dir="templates/"
 # Allow a custom solr schema to be installed
 schema=$(config-get schema)
@@ -45,7 +45,9 @@ sed -e "s/!JAVA-MIN-HEAP!/$min_heap/" \
     $template_dir/jetty-default.template > /etc/default/jetty
 
 # Restart jetty if it's already running
+set +e
 pgrep jsvc 2>&1 > /dev/null
+set -e
 if [[ $? -eq 0 ]]; then
     /etc/init.d/jetty stop
     jetty_start
