@@ -14,15 +14,3 @@ try:
     _ = charmhelpers
 except ImportError:
     sys.exit("Could not find required 'charmhelpers' library.")
-
-# Make sure that shelltoolbox is importable, or bail out.
-local_copy = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)),
-    "lib", "shelltoolbox")
-if os.path.exists(local_copy) and os.path.isdir(local_copy):
-    sys.path.insert(0, local_copy)
-try:
-    import shelltoolbox
-    _ = shelltoolbox
-except ImportError:
-    sys.exit("Could not find required 'shelltoolbox' library.")

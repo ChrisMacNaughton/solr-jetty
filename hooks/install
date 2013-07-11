@@ -15,4 +15,4 @@ if [[ -d exec.d ]]; then
 fi
 
 # default-jdk should be a prerequisite for jetty (Bug#1046732)
-apt-get install -y solr-jetty default-jdk curl
+apt-get install -y solr-jetty default-jdk curl python-shelltoolbox
