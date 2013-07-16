@@ -16,9 +16,13 @@ proof: revision
 	@test `cat revision` = 0 && rm revision
 
 sourcedeps: $(PWD)/config-manager.txt
+	@mkdir -p $(SOURCEDEPS_DIR)
 	@echo Updating source dependencies...
 	@$(PYTHON) cm.py -c $(PWD)/config-manager.txt \
 		-p $(SOURCEDEPS_DIR) \
 		-t $(PWD)
+	@cd $(SOURCEDEPS_DIR)/charm-helpers; \
+		$(PYTHON) setup.py install --install-purelib=$(PWD)/lib \
+		--install-scripts=$(PWD)/lib/bin
 
 .PHONY: revision proof sourcedeps
