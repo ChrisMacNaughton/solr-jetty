@@ -5,6 +5,7 @@ jetty_start() {
     curl_rc=-1
     counter=0
     OPTS=$(set +o | sed -e 's/$/;/') # save current options
+    set +e
     while [[ $curl_rc -ne 0 ]]; do
         juju-log "Waiting for solr-jetty to respond ($counter)"
         curl --silent --max-time 5 "http://localhost:8080/solr/select?q=test" 2>&1 > /dev/null
