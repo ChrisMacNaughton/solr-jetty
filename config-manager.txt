@@ -1,0 +1,6 @@
+# After making changes to this file, to ensure that your sourcedeps are
+# up-to-date do:
+#
+#   make sourcedeps
+
+../.sourcecode/charm-helpers                       bzr+ssh://bazaar.launchpad.net/+branch/charm-helpers;revno=38

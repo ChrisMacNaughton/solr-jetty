@@ -56,4 +56,3 @@ options:
       Service units will raise a configure-error if volume-persistent
       is 'true' and no volume-map value is set. Use 'juju set' to set a
       value and 'juju resolved' to complete configuration.
-      Note volumes require charmsupport to be installed

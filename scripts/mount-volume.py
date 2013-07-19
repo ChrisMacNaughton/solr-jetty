@@ -2,10 +2,14 @@
 
 import sys
 import os
-from charmsupport import volumes
-from charmsupport import hookenv
-from charmsupport import host
 from pwd import getpwnam
+
+import _pythonpath
+_ = _pythonpath
+
+from charmhelpers.contrib.charmsupport import volumes
+from charmhelpers.core import hookenv
+from charmhelpers.core import host
 
 def storage_is_persistent():
     if os.path.islink(SOLR_DIR):

@@ -14,12 +14,5 @@ if [[ -d exec.d ]]; then
     done
 fi
 
-
-apt-add-repository -y ppa:charmsupport/ppa
-apt-get update
-
-# charmsupport for persistent storage support
-apt-get install python-charmsupport
-
 # default-jdk should be a prerequisite for jetty (Bug#1046732)
-apt-get install -y solr-jetty default-jdk curl
+apt-get install -y solr-jetty default-jdk curl python-shelltoolbox
