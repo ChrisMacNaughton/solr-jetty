@@ -7,6 +7,8 @@ description: |
   search, caching, replication, and a web administration interface. It
   runs in a Java servlet container such as Tomcat.  This package
   provides the Jetty integration files for Solr.
+tags: 
+  - application_development
 provides:
   website:
     interface: http

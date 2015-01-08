@@ -2,19 +2,23 @@ options:
   # Solr configuration
   schema:
     type: string
+    default:
     description: |
       Solr XML schema (base64 encoded).
   # Jetty configuration
   java-max-heap-mb:
     type: int
+    default:
     description: |
       Java options Max heap size (-Xmx)
   java-min-heap-mb:
     type: int
+    default:
     description: |
       Java options min heap size (-Xms)
   acceptors:
     type: int
+    default:
     description: |
       The number of threads dedicated to accepting incoming connections. 
   instance_type:
