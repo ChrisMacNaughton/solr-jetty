@@ -182,7 +182,7 @@ def configure(service, key, auth, use_syslog):
     keyring = keyring_path(service)
     with open('/etc/ceph/ceph.conf', 'w') as ceph_conf:
         ceph_conf.write(CEPH_CONF % locals())
-    # modprobe_kernel_module('rbd')
+    modprobe_kernel_module('rbd')
 
 
 def image_mapped(image_name):
@@ -211,7 +211,18 @@ def modprobe_kernel_module(module):
     execute_shell(cmd)
 
 
-def ensure_ceph_storage(service, pool, rbd_img, sizemb,
+def filesystem_mounted(fs):
+    return subprocess.call(['grep', '-wqs', fs, '/proc/mounts']) == 0
+
+
+def make_filesystem(blk_device, fstype='ext4'):
+    utils.juju_log('INFO',
+                   'ceph: Formatting block device %s as filesystem %s.' %\
+                   (blk_device, fstype))
+    cmd = ['mkfs', '-t', fstype, blk_device]
+    execute(cmd)
+
+def ensure_ceph_storage(service, pool, rbd_img, sizemb, mount_point,
                         blk_device, fstype, system_services=[],
                         rbd_pool_replicas=2):
     """
@@ -230,3 +241,5 @@ def ensure_ceph_storage(service, pool, rbd_img, sizemb,
     if not image_mapped(rbd_img):
         utils.juju_log('INFO', 'ceph: Mapping RBD Image as a Block Device.')
         map_block_storage(service, pool, rbd_img)
+    if not filesystem_mounted(mount_point):
+        make_filesystem(blk_device, fstype)

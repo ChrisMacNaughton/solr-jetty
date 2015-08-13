@@ -5,7 +5,8 @@ import os
 
 import lib.utils as utils
 import lib.ceph_utils as ceph
-
+import lib.mount_volume as mount
+from lib.charmhelpers.core import host
 # CEPH
 SERVICE_NAME = os.getenv('JUJU_UNIT_NAME').split('/')[0]
 
@@ -32,24 +33,17 @@ def ceph_changed():
 
     sizemb = int(utils.config_get('block-size')) * 1024
     rbd_img = utils.config_get('rbd-name')
-    blk_device = '/dev/rbd/%s/%s%s' % (POOL_NAME, rbd_img, UNIT_ID)
+    blk_device = '/dev/rbd/%s/%s' % (POOL_NAME, rbd_img)
     rbd_pool_rep_count = utils.config_get('ceph-osd-replication-count')
     ceph.ensure_ceph_storage(service=SERVICE_NAME, pool=POOL_NAME,
                              rbd_img=rbd_img, sizemb=sizemb,
-                             fstype='ext4', blk_device=blk_device,
+                             fstype='ext4', mount_point='/srv/juju/volumes/' + SERVICE_NAME + '-' + UNIT_ID,
+                             blk_device=blk_device,
                              system_services=['mysql'],
                              rbd_pool_replicas=rbd_pool_rep_count)
 
-    # If 'ha' relation has been made before the 'ceph' relation
-    # it is important to make sure the ha-relation data is being
-    # sent.
-    if utils.is_relation_made('ha'):
-        utils.juju_log('INFO',
-                       '*ha* relation exists. Making sure the ha'
-                       ' relation data is sent.')
-        ha_relation_joined()
-        return
-
+    mount.mount()
+    host.service_start('jetty')
     utils.juju_log('INFO', 'Finish Ceph Relation Changed')
 
 hooks = {

@@ -39,10 +39,7 @@ def set_permissions():
                 os.chown(os.path.join(root, subdir), jetty_uid, -1)
 
 
-SOLR_DIR = '/var/lib/solr'
-SAVED_DIR = "{}.{}".format(SOLR_DIR, 'charm_saved')
-
-if __name__ == '__main__':
+def mount():
     try:
         mountpoint = volumes.configure_volume(before_change=volume_change_pre, after_change=volume_change_post)
     except volumes.VolumeConfigurationError:
@@ -67,3 +64,10 @@ if __name__ == '__main__':
             os.symlink(mountpoint, SOLR_DIR)
             set_permissions()
             host.service_start('jetty')
+
+
+SOLR_DIR = '/var/lib/solr'
+SAVED_DIR = "{}.{}".format(SOLR_DIR, 'charm_saved')
+
+if __name__ == '__main__':
+    mount()
