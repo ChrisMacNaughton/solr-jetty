@@ -52,6 +52,29 @@ options:
       If true, solr-jetty will run from its default directory /var/lib/solr/.
          All data will be destroyed with the instance.
       Note volumes require charmsupport to be installed
+  rbd-name:
+    type: string
+    default: 'solr'
+    description: >
+      The name that will be used to create the Ceph's RBD image with. If the
+          image name exists in Ceph, it will be re-used and the data will be
+          overwritten.
+  ceph-osd-replication-count:
+        default: 3
+        type: int
+        description: |
+          This value dictates the number of replicas ceph must make of any
+          object it stores within the Solr rbd pool. Of course, this only
+          applies if using Ceph as a backend store. Note that once the Solr
+          rbd pool has been created, changing this value will not have any
+          effect (although it can be changed in ceph by manually configuring
+          your ceph cluster).
+  block-size:
+    type: int
+    default: 5
+    description: |
+      Default block storage size to create when setting up Solr block storage.
+      This value should be specified in GB (e.g. 100 not 100GB).
   volume-map:
     type: string
     default: '{}'
