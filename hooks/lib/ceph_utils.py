@@ -17,9 +17,6 @@ import shutil
 import time
 import lib.utils as utils
 
-from charmhelpers.contrib.network.ip import (
-    format_ipv6_addr
-)
 
 KEYRING = '/etc/ceph/ceph.client.%s.keyring'
 KEYFILE = '/etc/ceph/ceph.client.%s.key'
@@ -172,8 +169,6 @@ def get_ceph_nodes():
                 utils.relation_get('ceph-public-address', rid=r_id,
                                    unit=unit) or \
                 utils.relation_get('private-address', rid=r_id, unit=unit)
-            # We host is an ipv6 address we need to wrap it in []
-            ceph_addr = format_ipv6_addr(ceph_addr) or ceph_addr
             hosts.append(ceph_addr)
 
     return hosts
@@ -187,7 +182,7 @@ def configure(service, key, auth, use_syslog):
     keyring = keyring_path(service)
     with open('/etc/ceph/ceph.conf', 'w') as ceph_conf:
         ceph_conf.write(CEPH_CONF % locals())
-    modprobe_kernel_module('rbd')
+    # modprobe_kernel_module('rbd')
 
 
 def image_mapped(image_name):

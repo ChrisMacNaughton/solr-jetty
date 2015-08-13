@@ -5,11 +5,6 @@ import os
 
 import lib.utils as utils
 import lib.ceph_utils as ceph
-import lib.cluster_utils as cluster
-
-from charmhelpers.contrib.peerstorage import (
-    peer_echo,
-)
 
 # CEPH
 SERVICE_NAME = os.getenv('JUJU_UNIT_NAME').split('/')[0]
@@ -35,15 +30,15 @@ def ceph_changed():
     ceph.configure(service=SERVICE_NAME, key=key, auth=auth,
                    use_syslog=use_syslog)
 
-      sizemb = int(utils.config_get('block-size')) * 1024
-      rbd_img = utils.config_get('rbd-name')
-      blk_device = '/dev/rbd/%s/%s%s' % (POOL_NAME, rbd_img, UNIT_ID)
-      rbd_pool_rep_count = utils.config_get('ceph-osd-replication-count')
-      ceph.ensure_ceph_storage(service=SERVICE_NAME, pool=POOL_NAME,
-                               rbd_img=rbd_img, sizemb=sizemb,
-                               fstype='ext4', blk_device=blk_device,
-                               system_services=['mysql'],
-                               rbd_pool_replicas=rbd_pool_rep_count)
+    sizemb = int(utils.config_get('block-size')) * 1024
+    rbd_img = utils.config_get('rbd-name')
+    blk_device = '/dev/rbd/%s/%s%s' % (POOL_NAME, rbd_img, UNIT_ID)
+    rbd_pool_rep_count = utils.config_get('ceph-osd-replication-count')
+    ceph.ensure_ceph_storage(service=SERVICE_NAME, pool=POOL_NAME,
+                             rbd_img=rbd_img, sizemb=sizemb,
+                             fstype='ext4', blk_device=blk_device,
+                             system_services=['mysql'],
+                             rbd_pool_replicas=rbd_pool_rep_count)
 
     # If 'ha' relation has been made before the 'ceph' relation
     # it is important to make sure the ha-relation data is being
