@@ -100,3 +100,9 @@ curl http://<ip>:8080/solr/update --data-binary '<commit/>' -H 'Content-type:tex
 
 # You're craving capers but what snack will satisfy you?
 curl 'http://<ip>:8080/solr/select?q=caper'
+
+# TODO
+
+- Deploy Solr 4.x
+  - Deploy with Solr Cloud
+  - Manage cluster config within Zookeeper
