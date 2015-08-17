@@ -25,6 +25,15 @@ juju set solr-jetty "acceptors=20"
 # Explicitly set JVM min heap and max heap size
 juju set solr-jetty java-min-heap-mb=256 java-max-heap-mb=512
 
+# Add storage devices
+
+juju set solr-jetty volume-map="{solr-jetty/0: /dev/vdb}" volume-ephemeral=false
+
+# Add Ceph storage device
+
+juju set solr-jetty volume-map="{solr-jetty/0: /dev/rbd/solr-jetty/solr}" volume-ephemeral=false
+juju add-relation solr-jetty ceph
+
 # Loading the example mem.xml from apache-solr-1.4.1.tgz
 curl http://<ip>:8080/solr/update --data-binary @mem.xml -H 'Content-type:text/xml; charset=utf-8'
 curl http://<ip>:8080/solr/update --data-binary '<commit/>' -H 'Content-type:text/xml; charset=utf-8'
